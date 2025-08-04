@@ -1,0 +1,38 @@
+#name: Sync main -> develop and delete release
+#on:
+#  push:
+#    branches:
+#      - main
+#jobs:
+#  sync-main-to-develop-and-clean-release:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout main
+#        uses: actions/checkout@v4
+#        with:
+#          ref: main
+#          fetch-depth: 0
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Set up Git config
+#        run: |
+#          git config user.name "github-actions"
+#          git config user.email "github-actions@github.com"
+#
+#      - name: Merge main into develop
+#        run: |
+#          git fetch origin develop
+#          git checkout develop
+#          git merge origin/main --no-edit
+#          git push origin develop
+#
+#      - name: Delete release branch if merged
+#        run: |
+#          git fetch origin release || exit 0
+#          if git merge-base --is-ancestor origin/release origin/main; then
+#            echo "Release branch has been merged. Deleting it..."
+#            git push origin --delete release
+#          else
+#            echo "Release not merged yet. Skipping deletion."
+#          fi
