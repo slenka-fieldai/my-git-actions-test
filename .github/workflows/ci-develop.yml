@@ -1,0 +1,68 @@
+name: ci-develop.yml
+on:
+  workflow_dispatch:
+jobs:
+  create-release-branch-and-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Echo the CI
+        run: echo "The CI now"
+
+#      - name: Install system-level dependencies (for xmlsec & others)
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y \
+#            libxml2-dev \
+#            libxmlsec1-dev \
+#            libxmlsec1-openssl \
+#            pkg-config \
+#            libffi-dev \
+#            libssl-dev \
+#            make \
+#            curl \
+#            unzip
+#      - name: Create and push release branch
+#        run: |
+#          git config user.name "${{ github.actor }}"
+#          git config user.email "${{ github.actor }}@users.noreply.github.com"
+#          git checkout -b release
+#          git push origin release
+#
+#      - name: Install AWS CLI
+#        run: |
+#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#          unzip awscliv2.zip
+#          sudo ./aws/install
+#          aws --version
+#
+#      - name: Install uv
+#        uses: astral-sh/setup-uv@v5
+#        with:
+#          version: ${{ vars.UV_VERSION }}
+#          python-version: "3.11.12"
+#
+#      - name: Generate requirements.txt
+#        run: |
+#          make generate-requirements
+#          cat requirements.txt
+#
+#      - name: Create PR to main
+#        uses: peter-evans/create-pull-request@v6
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          base: main
+#          head: release
+#          title: "Release PR: promotion release -> main"
+#          body: "This PR promotes `release` branch into `main`."
+#          draft: false
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          role-to-assume: arn:aws:iam::539247465483:role/fai-airflow-github-actions
+#          aws-region: us-west-2
+#
+#      - name: Sync Airflow files to the MWAA S3 bucket with the AWS CLI
+#        run: |
+#          aws s3 sync . s3://${{ env.BUCKET_NAME }} --follow-symlinks --delete --exclude '.git/*' --exclude '.venv/*' --exclude 'aws/*'
