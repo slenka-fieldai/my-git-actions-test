@@ -33,7 +33,7 @@ jobs:
           git fetch origin main
           mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
           echo "Contributors:"
-          printf '%s\n' "${contributors[@]"
+          printf '%s\n' "${contributors[@]}"
 
       - name: Create Pull Request
         run: |
