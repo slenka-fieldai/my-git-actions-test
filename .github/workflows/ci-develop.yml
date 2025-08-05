@@ -18,10 +18,10 @@ jobs:
           ref: develop
           fetch-depth: '1'
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+#      - name: Configure Git
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       # check existing release branch before creating a new one
       - name: Check for existing release branch
