@@ -2,15 +2,14 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    branches:
-      - develop
+
 jobs:
   ci:
     if: github.event.pull_request.draft == false
-    runs-on: arc-runner-set-medium
+    runs-on: ubuntu-latest
     steps:
       - name: Git clone the repository
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
-      - name: On the PR to develop
-        run: echo "PR to develop"
+      - name: CI step for linting
+        run: echo "CI step for linting"

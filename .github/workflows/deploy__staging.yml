@@ -1,0 +1,12 @@
+name: Deploy Staging
+on:
+  workflow_run:
+    workflows: [CI, Create Release]
+    types: [completed]
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check this step
+        run: echo 'Triggered successfully'
