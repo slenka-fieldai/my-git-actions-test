@@ -24,6 +24,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       # check existing release branch before creating a new one
+      - name: Check for existing release branch
+        run: |
+          if git ls-remote --heads origin release | grep release; then
+            echo "Release branch already exists. Exiting workflow"
+            exit 1
+          fi
 
       - name: Create and push release branch
         run: |
