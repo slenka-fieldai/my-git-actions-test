@@ -27,6 +27,9 @@ jobs:
           git checkout -b release
           git push origin release
 
+      - name: Check gh version
+        run: gh --version
+
 #      - name: Install system-level dependencies (for xmlsec & others)
 #        run: |
 #          sudo apt-get update
