@@ -32,19 +32,21 @@ jobs:
         run: |
           git fetch origin main
           mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
-          body="### Auto-generated Release PR\n"
-          body+="\nThis PR merges the release branch into \`main\`."
-          body+="\n\n### ✅ Contributor Sign-off:\n"
-      
-          for name in "${contributors[@]}"; do
-            body+="- [ ] $name\n"
-          done
-
-          echo -e "$body"
+          
+          {
+            echo "### 🚀 Auto-generated Release PR"
+            echo
+            echo "This PR merges the release branch into \`main\`."
+            echo
+            echo "### ✅ Contributor Sign-off:"
+            for name in "${contributors[@]}"; do
+              echo "- [ ] $name"
+            done
+          } > pr_body.md
           
           gh pr create \
             --title 'Release PR' \
-            --body "$body" \
+            --body-file pr_body.md \
             --base main \
             --head release
         env:
