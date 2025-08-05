@@ -1,0 +1,42 @@
+name: Create Release
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  create-release-branch-and-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout develop branch
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: '1'
+
+      # check existing release branch before creating a new one
+      - name: Check for existing release branch
+        run: |
+          if git ls-remote --heads origin release | grep release; then
+            echo "Release branch already exists. Exiting workflow"
+            exit 1
+          fi
+
+      - name: Create and push release branch
+        run: |
+          git checkout -b release
+          git push origin release
+
+      - name: Check gh version
+        run: gh --version
+
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --title 'Release PR' \
+            --body 'Auto generated PR from release to main' \
+            --base main \
+            --head release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
