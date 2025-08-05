@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
@@ -22,6 +23,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # check existing release branch before creating a new one
+
       - name: Create and push release branch
         run: |
           git checkout -b release
@@ -29,6 +32,9 @@ jobs:
 
       - name: Check gh version
         run: gh --version
+
+      - name: Authenticate gh CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
 #      - name: Install system-level dependencies (for xmlsec & others)
 #        run: |
