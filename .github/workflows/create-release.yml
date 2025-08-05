@@ -28,8 +28,12 @@ jobs:
           git checkout -b release
           git push origin release
 
-      - name: Check gh version
-        run: gh --version
+      - name: Get users
+        run: |
+          git fetch origin main
+          mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
+          echo "Contributors:"
+          printf '%s\n' "${contributors[@]"
 
       - name: Create Pull Request
         run: |
