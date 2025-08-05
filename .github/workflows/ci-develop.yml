@@ -9,6 +9,11 @@ jobs:
       - name: Echo the CI
         run: echo "The CI now"
 
+      - name: Create and push release branch
+        run: |
+          git checkout -b release
+          git push origin release
+
 #      - name: Install system-level dependencies (for xmlsec & others)
 #        run: |
 #          sudo apt-get update
