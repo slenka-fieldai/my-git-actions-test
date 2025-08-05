@@ -36,6 +36,14 @@ jobs:
       - name: Authenticate gh CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --title 'Release PR' \
+            --body 'Auto generated PR from release to main' \
+            --base main \
+            --head release
+
 #      - name: Install system-level dependencies (for xmlsec & others)
 #        run: |
 #          sudo apt-get update
