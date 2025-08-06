@@ -52,12 +52,16 @@ jobs:
             done
           } > pr_body.md
           
-          PR_URL=$(gh pr create \
+          pr_json=$(gh pr create \
             --title "Release PR" \
             --body-file pr_body.md \
             --base main \
-            --head release)
-          echo "url=$PR_URL" >> $GITHUB_OUTPUT
+            --head release \
+            --json url)
+          
+          echo "$pr_json"
+          echo "$pr_json" | jq -r '.url'
+          echo "pr_url=$(echo $pr_json" | jq -r '.url')" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -116,7 +120,7 @@ jobs:
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "*Repo:*\n<github.com/field-ai/core_airflow/pulls|core_airflow>"
+                    "text": "*Repo:*\n<https://github.com/field-ai/core_airflow/pulls|core_airflow>"
                   }
                 ]
               },
