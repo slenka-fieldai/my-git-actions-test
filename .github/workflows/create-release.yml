@@ -36,7 +36,7 @@ jobs:
           {
             echo "### Auto-generated Release PR"
             echo
-            echo "This PR merges the release branch into \`main\` and deploys the changes to the STAGING environment"
+            echo "This PR merges the release branch into \`main\` and deploys the changes to the ###STAGING environment"
             echo
             echo "Checklist for all the contributors who are part of this change are listed below:"
             echo "### ✅ Contributor Sign-off:"
@@ -44,8 +44,9 @@ jobs:
               echo "- [ ] $name"
             echo
             echo "Please review the changes, check and validate the changes in the STAGING environment before merging."
+            echo
             echo "In case hotfix is required, please create a branch from release and merge it into release,"
-            echo "validate in the STAGING environment, and once all the contributors have approved merge the changes"
+            echo "validate in the STAGING environment, and once all the contributors have approved, merge the changes."
             done
           } > pr_body.md
           
@@ -54,5 +55,6 @@ jobs:
             --body-file pr_body.md \
             --base main \
             --head release
+            --reviewer slenka-fieldai
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
