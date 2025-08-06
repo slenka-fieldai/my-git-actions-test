@@ -55,6 +55,6 @@ jobs:
             --body-file pr_body.md \
             --base main \
             --head release
-            --reviewer "slenka-fieldai"
+            --reviewer s.lenka
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
