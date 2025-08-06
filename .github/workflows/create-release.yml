@@ -52,16 +52,15 @@ jobs:
             done
           } > pr_body.md
           
-          pr_json=$(gh pr create \
+          pr_url=$(gh pr create \
             --title "Release PR" \
             --body-file pr_body.md \
             --base main \
-            --head release \
-            --json url)
+            --head release)
           
-          echo "$pr_json"
-          echo "$pr_json" | jq -r '.url'
-          echo "pr_url=$(echo $pr_json" | jq -r '.url')" >> $GITHUB_OUTPUT
+          echo "$pr_url"
+          echo $pr_url
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
