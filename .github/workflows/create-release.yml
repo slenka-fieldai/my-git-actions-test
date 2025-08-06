@@ -5,9 +5,20 @@ permissions:
   contents: write
   pull-requests: write
 jobs:
+  aws-config:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Install AWS CLI and configure credentials
+       uses: ./.github/workflows/_aws_config.yml
+       with:
+         role-to-assume-arn: "arn:aws:iam::539247465483:role/fai-airflow-github-actions"
+
+     - name: List S3 files
+       run: |
+         aws s3 ls s3://fai-core-airflow
+
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
-    if: github.head_ref == 'develop'
     steps:
       - name: checkout develop branch
         uses: actions/checkout@v4
