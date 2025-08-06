@@ -110,11 +110,11 @@ jobs:
               {
                 "type": "section",
                 "fields": [
-                  "text": {
+                  {
                     "type": "mrkdwn",
                     "text": "*GitHub PR Link:*\n<${{ needs.create-release-branch-and-pr.outputs.pr_url }}|Link to PR>"
                   },
-                  "text": {
+                  {
                     "type": "mrkdwn",
                     "text": "*Repo:*\n<github.com/field-ai/core_airflow/pulls|core_airflow>"
                   }
