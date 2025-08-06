@@ -9,7 +9,8 @@ jobs:
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
     outputs:
-      pr_url: ${{ steps.create-pr.outputs.url }}
+      pr-url: ${{ steps.create-pr.outputs.pr-url }}
+      pr-num: ${{ steps.create-pr.outputs.pr-num }}
     steps:
       - name: checkout develop branch
         uses: actions/checkout@v4
@@ -59,8 +60,10 @@ jobs:
             --base main \
             --head release)
           
-          echo "url=$pr_url" >> $GITHUB_OUTPUT
+          echo "pr-url=$pr_url" >> $GITHUB_OUTPUT
           echo "Link: $pr_url"
+          echo "PR number: ${pr_url##*/}"
+          echo "pr-num=${pr_url##*/}" >> $GITHUB_OUTPUT
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,21 +82,21 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            "channel": "#test-dataset-notifications"
-            "text": "Hello from GitHub Actions! PR Raised!"
+            "channel": "#test-dataset-notifications",
+            "text": "Hello from GitHub Actions! PR Raised!",
             "blocks": [
               {
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "GitHub Actions: Airflow Release PR"
+                  "text": "PR #${{ needs.create-release-branch-and-pr.outputs.pr-num }}: GitHub Actions: Airflow Release PR"
                 }
               },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "This PR merges the `release` branch into `main` and deploys the changes to the STAGING environment"
+                  "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow STAGING environment"
                 }
               },
               {
@@ -112,7 +115,7 @@ jobs:
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "*Repo:*\n<https://github.com/field-ai/core_airflow/pulls|core_airflow>"
+                    "text": "*Repo:*\n<https://github.com/field-ai/core_airflow|core_airflow>"
                   }
                 ]
               },
