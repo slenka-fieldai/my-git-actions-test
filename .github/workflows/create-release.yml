@@ -84,16 +84,17 @@ jobs:
             "text": "Hello from GitHub Actions! PR Raised!"
             "blocks": [
               {
-                "type": "header"
+                "type": "header",
                 "text": {
                   "type": "plain_text",
                   "text": "GitHub Actions: Airflow Release PR"
                 }
               },
               {
-                - "type": "section"
-                  "text":
-                   "type": "mrkdwn"
-                   "text": "Message: ${{ toJSON(github.event.head_commit.message) }}"
+                "type": "section"
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Message: ${{ toJSON(github.event.head_commit.message) }}"
+                }
               }
             ]
