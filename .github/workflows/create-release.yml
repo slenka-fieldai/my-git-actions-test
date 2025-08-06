@@ -61,6 +61,7 @@ jobs:
       - name: Read PR body into output
         id: prbody
         run: |
+          cat pr_body.md
           echo "body<<EOF" >> $GITHUB_OUTPUT
           cat pr_body.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -79,10 +80,20 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            channel: "#test-dataset-notifications"
-            text: "Hello from GitHub Actions! PR Raised!"
-            blocks:
-              - type: "section"
-                text:
-                 type: "mrkdwn"
-                 text: "GitHub Action build result: ${{ needs.create-release-branch-and-pr.outputs.prbody }} \n Job status: ${{ job.status }}"
+            "channel": "#test-dataset-notifications"
+            "text": "Hello from GitHub Actions! PR Raised!"
+            "blocks": [
+              {
+                "type": "header"
+                "text": {
+                  "type": "plain_text",
+                  "text": "GitHub Actions: Airflow Release PR"
+                }
+              },
+              {
+                - "type": "section"
+                  "text":
+                   "type": "mrkdwn"
+                   "text": "Message: ${{ toJSON(github.event.head_commit.message) }}"
+              }
+            ]
