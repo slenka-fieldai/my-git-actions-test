@@ -1,13 +1,16 @@
 name: Create Release
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - develop
 permissions:
   contents: write
   pull-requests: write
 jobs:
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
-
+    if: github.ref == 'refs/heads/develop'
     steps:
       - name: checkout develop branch
         uses: actions/checkout@v4
@@ -50,16 +53,10 @@ jobs:
             done
           } > pr_body.md
           
-          args=()
-          for reviewer in "${contributors[@]}"; do
-            args+=(--reviewer "$reviewer")
-          done
-          
           gh pr create \
             --title "Release PR" \
             --body-file pr_body.md \
             --base main \
-            --head release \
-            "${args[@]}"
+            --head release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
