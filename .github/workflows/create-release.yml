@@ -50,11 +50,16 @@ jobs:
             done
           } > pr_body.md
           
+          args=()
+          for reviewer in "${contributors[@]}"; do
+            args+=(--reviewer "$reviewer")
+          done
+          
           gh pr create \
             --title "Release PR" \
             --body-file pr_body.md \
             --base main \
             --head release \
-            --reviewer "slenka-fieldai"
+            "${args[@]}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
