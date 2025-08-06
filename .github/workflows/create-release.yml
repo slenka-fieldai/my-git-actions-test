@@ -82,41 +82,43 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            "channel": "#test-dataset-notifications",
-            "text": "Hello from GitHub Actions! PR Raised!",
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "PR #${{ needs.create-release-branch-and-pr.outputs.pr-num }}: GitHub Actions: Airflow Release PR"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow STAGING environment"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "Please review the changes, check and validate the changes in the STAGING environment before merging."
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*GitHub PR Link:*\n<${{ needs.create-release-branch-and-pr.outputs.pr_url }}|Link to PR>"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Repo:*\n<https://github.com/field-ai/core_airflow|core_airflow>"
+            {
+              "channel": "#test-dataset-notifications",
+              "text": "Hello from GitHub Actions! PR Raised!",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "PR #${{ needs.create-release-branch-and-pr.outputs.pr-num }}: GitHub Actions: Airflow Release PR"
                   }
-                ]
-              },
-            ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow STAGING environment"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Please review the changes, check and validate the changes in the STAGING environment before merging."
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*GitHub PR Link:*\n<${{ needs.create-release-branch-and-pr.outputs.pr_url }}|Link to PR>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repo:*\n<https://github.com/field-ai/core_airflow|core_airflow>"
+                    }
+                  ]
+                }
+              ]
+            }
