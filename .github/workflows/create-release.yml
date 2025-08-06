@@ -55,6 +55,6 @@ jobs:
             --body-file pr_body.md \
             --base main \
             --head release
-            --reviewer s.lenka
+            --reviewer "s.lenka"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
