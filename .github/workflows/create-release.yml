@@ -85,4 +85,4 @@ jobs:
               - type: "section"
                 text:
                  type: "mrkdwn"
-                 text: "GitHub Action build result: ${{ job.status }}\n${{ needs.create-release-branch-and-pr.outputs.prbody }}"
+                 text: "GitHub Action build result: ${{ needs.create-release-branch-and-pr.outputs.prbody }} \n Job status: ${{ job.status }}"
