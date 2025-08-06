@@ -97,7 +97,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "This PR merges the `release` branch into \`main\` and deploys the changes to the STAGING environment"
+                  "text": "This PR merges the `release` branch into `main` and deploys the changes to the STAGING environment"
                 }
               },
               {
