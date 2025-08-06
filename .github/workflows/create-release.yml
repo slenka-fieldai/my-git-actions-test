@@ -58,19 +58,11 @@ jobs:
             --base main \
             --head release)
           
-          echo "pr_url=$pr_url" >> $GITHUB_TOKEN
+          echo "url=$pr_url" >> $GITHUB_TOKEN
           echo "Link: $pr_url"
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Read PR body into output
-        id: prbody
-        run: |
-          cat pr_body.md
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          cat pr_body.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
   send-slack-notification:
     needs: [create-release-branch-and-pr]
