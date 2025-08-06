@@ -8,6 +8,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+     - name: Git clone the repository
+       uses: actions/checkout@v4
+
      - name: Install AWS CLI
        run: |
          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
