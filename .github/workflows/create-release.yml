@@ -2,12 +2,23 @@ name: Create Release
 on:
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 jobs:
+#  aws-config:
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Install AWS CLI and configure credentials
+#       uses: ./.github/workflows/_aws_config.yml
+#       with:
+#         role-to-assume-arn: "arn:aws:iam::539247465483:role/fai-airflow-github-actions"
+#
+#     - name: List S3 files
+#       run: |
+#         aws s3 ls s3://fai-core-airflow
+
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
-
     steps:
       - name: checkout develop branch
         uses: actions/checkout@v4
@@ -28,14 +39,31 @@ jobs:
           git checkout -b release
           git push origin release
 
-      - name: Check gh version
-        run: gh --version
-
       - name: Create Pull Request
         run: |
+          git fetch origin main
+          mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
+          
+          {
+            echo "### Auto-generated Release PR"
+            echo
+            echo "This PR merges the release branch into \`main\` and deploys the changes to the STAGING environment"
+            echo
+            echo "Checklist for all the contributors who are part of this change are listed below:"
+            echo "### ✅ Contributor Sign-off:"
+            for name in "${contributors[@]}"; do
+              echo "- [ ] $name"
+            echo
+            echo "Please review the changes, check and validate the changes in the STAGING environment before merging."
+            echo
+            echo "In case hotfix is required, please create a branch from release and merge it into release,"
+            echo "validate in the STAGING environment, and once all the contributors have approved, merge the changes."
+            done
+          } > pr_body.md
+          
           gh pr create \
-            --title 'Release PR' \
-            --body 'Auto generated PR from release to main' \
+            --title "Release PR" \
+            --body-file pr_body.md \
             --base main \
             --head release
         env:
