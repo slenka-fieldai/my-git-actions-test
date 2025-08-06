@@ -2,35 +2,9 @@ name: Create Release
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 jobs:
-#  aws-config:
-#   runs-on: ubuntu-latest
-#   steps:
-#     - name: Install AWS CLI and configure credentials
-#       uses: ./.github/workflows/_aws_config.yml
-#       with:
-#         role-to-assume-arn: "arn:aws:iam::539247465483:role/fai-airflow-github-actions"
-#
-#     - name: List S3 files
-#       run: |
-#         aws s3 ls s3://fai-core-airflow
-  send-slack-notification:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: 'false'
-      - name: Start the Slack workflow
-        uses: slackapi/slack-github-action@v2
-        with:
-          method: chat.postMessage
-          token: ${{ secrets.SLACK_BOT_TOKEN }}
-          payload: |
-            channel: "#test-dataset-notifications"
-            text: "Hello from GitHub Actions!"
 
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
@@ -83,3 +57,25 @@ jobs:
             --head release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  send-slack-notification:
+    needs: [create-release-branch-and-pr]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: 'false'
+      - name: Start the Slack workflow
+        uses: slackapi/slack-github-action@v2
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "#test-dataset-notifications"
+            text: "Hello from GitHub Actions! PR Raised!"
+            blocks:
+              - type: "section"
+                text:
+                 type: "mrkdwn"
+                 text: "GitHub Action build result: ${{ job.status }}\n{{ github.event.pull_request.html_url || github.event.head_commit.url}}"
