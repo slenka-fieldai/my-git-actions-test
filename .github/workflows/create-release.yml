@@ -59,7 +59,7 @@ jobs:
             --base main \
             --head release)
           
-          echo "url=$pr_url" >> $GITHUB_TOKEN
+          echo "url=$pr_url" >> $GITHUB_OUTPUT
           echo "Link: $pr_url"
 
         env:
