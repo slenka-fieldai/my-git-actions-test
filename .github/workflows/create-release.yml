@@ -112,7 +112,7 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*GitHub PR Link:*\n<${{ needs.create-release-branch-and-pr.outputs.pr_url }}|Link to PR>"
+                      "text": "*GitHub PR Link:*\n<${{ needs.create-release-branch-and-pr.outputs.pr-url }}|Link to PR>"
                     },
                     {
                       "type": "mrkdwn",
