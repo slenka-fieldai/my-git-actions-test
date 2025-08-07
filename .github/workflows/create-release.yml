@@ -38,6 +38,8 @@ jobs:
           git fetch origin main
           mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
           
+          exit 1
+          
           {
             echo "### Auto-generated Release PR"
             echo
@@ -120,6 +122,43 @@ jobs:
                       "text": "*Repo:*\n<https://github.com/field-ai/core_airflow|core_airflow>"
                     }
                   ]
+                }
+              ]
+            }
+  notify-on-failure:
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack message on failure
+        uses: slackapi/slack-github-action@v2
+        with:
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          payload: |
+            {
+              "channel": "${{ env.SLACK_CHANNEL }}",
+              "text": "🚨 Create Release workflow failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 Workflow Failed: Create Release"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "View the full logs here:\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions Run>"
+                  }
                 }
               ]
             }
