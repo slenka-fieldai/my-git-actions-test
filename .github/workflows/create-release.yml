@@ -47,12 +47,12 @@ jobs:
             echo "### ✅ Contributor Sign-off:"
             for name in "${contributors[@]}"; do
               echo "- [ ] $name"
+            done
             echo
             echo "Please review the changes, check and validate the changes in the STAGING environment before merging."
             echo
             echo "In case hotfix is required, please create a branch from release and merge it into release,"
             echo "validate in the STAGING environment, and once all the contributors have approved, merge the changes."
-            done
           } > pr_body.md
           
           pr_url=$(gh pr create \
