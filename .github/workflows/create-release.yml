@@ -125,9 +125,12 @@ jobs:
                 }
               ]
             }
+
   notify-on-failure:
     if: ${{ failure() }}
+    needs: [create-release-branch-and-pr, send-slack-notification]
     runs-on: ubuntu-latest
+    continue-on-error: false
     steps:
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
