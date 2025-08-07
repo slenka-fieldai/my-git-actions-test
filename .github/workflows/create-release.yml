@@ -91,7 +91,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow Release PR for *Staging* environment"
+                    "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow Release PR for Staging environment"
                   }
                 },
                 {
