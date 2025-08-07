@@ -76,7 +76,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Workflow job status:\n*Deploy to Airflow:* `${{ needs.deploy-to-airflow.result }} ${{ steps.status-emojis.outputs.deploy }}`\n*Detect file changes:* `${{ needs.detect-file-changes.result }} ${{ steps.status-emojis.outputs.detect }}`\n*Airflow env refresh:* `${{ needs.airflow-env-refresh.result }}` ${{ steps.status-emojis.outputs.refresh }} "
+                    "text": "Workflow job status:\n*Deploy to Airflow:* `${{ needs.deploy-to-airflow.result }}` ${{ steps.status-emojis.outputs.deploy }}\n*Detect file changes:* `${{ needs.detect-file-changes.result }}` ${{ steps.status-emojis.outputs.detect }}\n*Airflow env refresh:* `${{ needs.airflow-env-refresh.result }}` ${{ steps.status-emojis.outputs.refresh }}"
                   }
                 },
                 {
