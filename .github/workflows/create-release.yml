@@ -73,6 +73,8 @@ jobs:
     needs: [create-release-branch-and-pr]
     runs-on: ubuntu-latest
     steps:
+      - name: Failure
+        run: exit 1
       - name: Deployment started slack notification
         uses: slackapi/slack-github-action@v2
         with:
@@ -147,7 +149,6 @@ jobs:
     if: ${{ failure() }}
     needs: [create-release-branch-and-pr, send-slack-notification]
     runs-on: ubuntu-latest
-    continue-on-error: false
     steps:
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
