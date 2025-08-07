@@ -63,7 +63,7 @@ jobs:
         id: branch-and-commit
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPU
+            echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
             echo "commit=" >> $GITHUB_OUTPUT
           else
             echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
@@ -97,7 +97,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.branch-and-commit.outputs.branch }}`\n${{ steps.branch-and-commit.outputs.commit && format('*Commit:* `{0}`\\n', steps.branch-and-commit.outputs.commit) || '' }}"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.branch-and-commit.outputs.branch }}`\n${{ steps.branch-and-commit.outputs.commit && format('*Commit:* `{0}`', steps.branch-and-commit.outputs.commit) || '' }}"
                   }
                 },
                 {
