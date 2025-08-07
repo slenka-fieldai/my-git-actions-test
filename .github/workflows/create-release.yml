@@ -83,13 +83,13 @@ jobs:
           payload: |
             {
               "channel": "${{ env.SLACK_CHANNEL }}",
-              "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-prod",
+              "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-staging",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-prod"
+                    "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-staging"
                   }
                 }
                ]
