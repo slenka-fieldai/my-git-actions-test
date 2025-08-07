@@ -73,8 +73,8 @@ jobs:
     needs: [create-release-branch-and-pr]
     runs-on: ubuntu-latest
     steps:
-      - name: Failure
-        run: exit 1
+      - name: success
+        run: exit 0
       - name: Deployment started slack notification
         uses: slackapi/slack-github-action@v2
         with:
