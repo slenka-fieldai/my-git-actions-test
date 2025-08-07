@@ -79,13 +79,13 @@ jobs:
           payload: |
             {
               "channel": "#test-dataset-notifications",
-              "text": "🚨 ${{ steps.meta.outputs.prefix }}${{ steps.meta.outputs.value }} Workflow Failed: Deploy to Airflow staging environment",
+              "text": "🚨 ${{ steps.meta.outputs.prefix }}${{ steps.meta.outputs.value }} Workflow Failed: Deploy to Airflow ${{ inputs.airflow-env-name }} environment",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "🚨 ${{ steps.meta.outputs.prefix }}${{ steps.meta.outputs.value }} Workflow Failed: Deploy to Airflow staging environment"
+                    "text": "🚨 ${{ steps.meta.outputs.prefix }}${{ steps.meta.outputs.value }} Workflow Failed: Deploy to Airflow ${{ inputs.airflow-env-name }} environment"
                   }
                 },
                 {
@@ -99,7 +99,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.branch-and-commit.outputs.branch }}`\n${{ steps.branch-and-commit.outputs.commit && format('*Commit:* `{0}`', steps.branch-and-commit.outputs.commit) || '' }}"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch that triggered workflow run:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
                   }
                 },
                 {
