@@ -2,23 +2,16 @@ name: Create Release
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
+env:
+  SLACK_CHANNEL: "#test-dataset-notifications"
 jobs:
-#  aws-config:
-#   runs-on: ubuntu-latest
-#   steps:
-#     - name: Install AWS CLI and configure credentials
-#       uses: ./.github/workflows/_aws_config.yml
-#       with:
-#         role-to-assume-arn: "arn:aws:iam::539247465483:role/fai-airflow-github-actions"
-#
-#     - name: List S3 files
-#       run: |
-#         aws s3 ls s3://fai-core-airflow
-
   create-release-branch-and-pr:
     runs-on: ubuntu-latest
+    outputs:
+      pr-url: ${{ steps.create-pr.outputs.pr-url }}
+      pr-num: ${{ steps.create-pr.outputs.pr-num }}
     steps:
       - name: checkout develop branch
         uses: actions/checkout@v4
@@ -40,6 +33,7 @@ jobs:
           git push origin release
 
       - name: Create Pull Request
+        id: create-pr
         run: |
           git fetch origin main
           mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
@@ -53,18 +47,146 @@ jobs:
             echo "### ✅ Contributor Sign-off:"
             for name in "${contributors[@]}"; do
               echo "- [ ] $name"
+            done
             echo
             echo "Please review the changes, check and validate the changes in the STAGING environment before merging."
             echo
             echo "In case hotfix is required, please create a branch from release and merge it into release,"
             echo "validate in the STAGING environment, and once all the contributors have approved, merge the changes."
-            done
           } > pr_body.md
           
-          gh pr create \
+          pr_url=$(gh pr create \
             --title "Release PR" \
             --body-file pr_body.md \
             --base main \
-            --head release
+            --head release)
+          
+          echo "pr-url=$pr_url" >> $GITHUB_OUTPUT
+          echo "Link: $pr_url"
+          echo "PR number: ${pr_url##*/}"
+          echo "pr-num=${pr_url##*/}" >> $GITHUB_OUTPUT
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  send-slack-notification:
+    needs: [create-release-branch-and-pr]
+    runs-on: ubuntu-latest
+    steps:
+      - name: success
+        run: exit 0
+      - name: Deployment started slack notification
+        uses: slackapi/slack-github-action@v2
+        with:
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          payload: |
+            {
+              "channel": "${{ env.SLACK_CHANNEL }}",
+              "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-prod",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-prod"
+                  }
+                }
+               ]
+             }
+      # the `text` in payload JSON is the top-level argument - it's not visible in the Slack channel message, as the blocks gets precedence,
+      # however, if I remove it everything works fine though I get the warning in the GitHub Actions.
+      # Why the text field kept? It's a best practice to always provide a `text` argument when posting a message.
+      # The `text` is used in places where the content cannot be rendered such as: system push notifications, assistive technology such as screen readers, etc.
+      - name: Start the Slack workflow
+        uses: slackapi/slack-github-action@v2
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "${{ env.SLACK_CHANNEL }}",
+              "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow Release PR for Staging environment",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow Release PR for Staging environment"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow *Staging* environment"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Please review the changes, check and validate the changes in the Airflow *Staging* environment."
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*GitHub PR Link:*\n<${{ needs.create-release-branch-and-pr.outputs.pr-url }}|Link to PR>"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repo:*\n<https://github.com/field-ai/core_airflow|core_airflow>"
+                    }
+                  ]
+                }
+              ]
+            }
+
+  notify-on-failure:
+    if: ${{ failure() }}
+    needs: [create-release-branch-and-pr, send-slack-notification]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack message on failure
+        uses: slackapi/slack-github-action@v2
+        with:
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          payload: |
+            {
+              "channel": "${{ env.SLACK_CHANNEL }}",
+              "text": "🚨 Create Release workflow failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 Workflow Failed: Create Release"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Workflow job status:\n *Job*: Create release branch and raise PR: `${{ needs.create-release-branch-and-pr.result }}`\n *Job*: Send Slack notifications: `${{ needs.send-slack-notification.result }}`\n"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch that triggered workflow run:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "View the full logs here:\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions Run>"
+                  }
+                }
+              ]
+            }
