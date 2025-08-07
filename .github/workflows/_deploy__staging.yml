@@ -6,11 +6,11 @@ on:
       - main
 jobs:
   deploy-to-airflow:
-    if: github.head_ref == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Run
-        run: exit 0
+        run: |
+          echo "${{ github.head_ref }}  ---- ${{ github.event.pull_request.head.ref }}"
   detect-file-changes:
     if: github.head_ref == 'release'
     runs-on: ubuntu-latest
