@@ -154,7 +154,14 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
+                    "text": "Workflow job status:\n *Job*: Create release branch and raise PR: ${{ needs.create-release-branch-and-pr.result }}\n *Job*: Send Slack notifications: ${{ needs.send-slack-notification.result }}\n"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch that triggered workflow run:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
                   }
                 },
                 {
