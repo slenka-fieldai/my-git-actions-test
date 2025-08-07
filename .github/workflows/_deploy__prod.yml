@@ -1,4 +1,4 @@
-name: Deploy To Staging Environment 2
+name: Deploy To Production Environment
 on:
   push:
     branches:
@@ -28,11 +28,17 @@ jobs:
     steps:
       # why we need this? because we need the PR number in the Slack message, and further we don't need to
       # specify the output variable at job level, as steps in the same job have access to each other's outputs.
-      - name: Get the PR number
-        id: get-pr-number
+      - name: Extract PR number or fallback
+        id: meta
         run: |
-          pr_num=$(echo "${{ github.ref_name }}" | cut -d'/' -f1)
-          echo "pr_num=$pr_num" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            pr_number="${{ github.event.pull_request.number }}"
+            echo "prefix=PR#" >> $GITHUB_OUTPUT
+            echo "value=$pr_number" >> $GITHUB_OUTPUT
+          else
+            echo "prefix=" >> $GITHUB_OUTPUT
+            echo "value=" >> $GITHUB_OUTPUT
+          fi
       - name: Set job status emojis
         id: status-emojis
         run: |
@@ -71,13 +77,13 @@ jobs:
           payload: |
             {
               "channel": "#test-dataset-notifications",
-              "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow production environment",
+              "text": "🚨 ${{ steps.meta.outputs.prefix }}${{ steps.meta.outputs.value }} Workflow Failed: Deploy to Airflow production environment",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow production environment"
+                    "text": "🚨 ${{ steps.meta.outputs.prefix }}${{ steps.meta.outputs.value }} Workflow Failed: Deploy to Airflow production environment"
                   }
                 },
                 {
