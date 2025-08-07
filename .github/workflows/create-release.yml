@@ -72,10 +72,10 @@ jobs:
     needs: [create-release-branch-and-pr]
     runs-on: ubuntu-latest
     steps:
-#      - name: Checkout the repo
-#        uses: actions/checkout@v4
-#        with:
-#          persist-credentials: 'false'
+      # the `text` in payload JSON is the top-level argument - it's not visible in the Slack channel message, as the blocks gets precedence,
+      # however, if I remove it everything works fine though I get the warning in the GitHub Actions.
+      # Why the text field kept? It's a best practice to always provide a `text` argument when posting a message.
+      # The `text` is used in places where the content cannot be rendered such as: system push notifications, assistive technology such as screen readers, etc.
       - name: Start the Slack workflow
         uses: slackapi/slack-github-action@v2
         with:
@@ -83,27 +83,28 @@ jobs:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
-              "channel": "#test-dataset-notifications",
+              "channel": ${{ env.SLACK_CHANNEL }},
+              "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow release PR for *Staging* environment",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "PR #${{ needs.create-release-branch-and-pr.outputs.pr-num }}: GitHub Actions: Airflow Release PR"
+                    "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow release PR for *Staging* environment"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow STAGING environment"
+                    "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow *Staging* environment"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Please review the changes, check and validate the changes in the STAGING environment before merging."
+                    "text": "Please review the changes, check and validate the changes in the Airflow *Staging* environment."
                   }
                 },
                 {
