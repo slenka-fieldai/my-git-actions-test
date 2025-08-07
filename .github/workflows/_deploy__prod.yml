@@ -1,7 +1,6 @@
 name: Deploy To Staging Environment 2
 on:
-  pull_request:
-    types: [opened, reopened, ready_for_review, review_requested, synchronize]
+  push:
     branches:
       - 'main'
 jobs:
@@ -10,9 +9,8 @@ jobs:
     steps:
       - name: Run
         run: |
-          echo "${{ github.head_ref }}  ---- ${{ github.event.pull_request.head.ref }}"
+          echo "Deploy to PROD"
   detect-file-changes:
-    if: github.head_ref == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Run
@@ -73,13 +71,13 @@ jobs:
           payload: |
             {
               "channel": "#test-dataset-notifications",
-              "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow staging environment",
+              "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow production environment",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow staging environment"
+                    "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow production environment"
                   }
                 },
                 {
