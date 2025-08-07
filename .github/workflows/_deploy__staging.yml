@@ -1,4 +1,4 @@
-name: _deploy__staging.yml
+name: Deploy To Staging
 on:
   pull_request:
     types: [opened]
