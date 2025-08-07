@@ -154,7 +154,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Workflow job status:\n *Job*: Create release branch and raise PR: ${{ needs.create-release-branch-and-pr.result }}\n *Job*: Send Slack notifications: ${{ needs.send-slack-notification.result }}\n"
+                    "text": "Workflow job status:\n *Job*: Create release branch and raise PR: `${{ needs.create-release-branch-and-pr.result }}`\n *Job*: Send Slack notifications: `${{ needs.send-slack-notification.result }}`\n"
                   }
                 },
                 {
