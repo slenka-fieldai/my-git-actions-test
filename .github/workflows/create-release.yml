@@ -38,8 +38,6 @@ jobs:
           git fetch origin main
           mapfile -t contributors < <(git log origin/main..HEAD --pretty="%an" | sort -u)
           
-          exit 1
-          
           {
             echo "### Auto-generated Release PR"
             echo
@@ -75,6 +73,9 @@ jobs:
     needs: [create-release-branch-and-pr]
     runs-on: ubuntu-latest
     steps:
+      - name: Failed step
+        run: |
+          exit 1
       # the `text` in payload JSON is the top-level argument - it's not visible in the Slack channel message, as the blocks gets precedence,
       # however, if I remove it everything works fine though I get the warning in the GitHub Actions.
       # Why the text field kept? It's a best practice to always provide a `text` argument when posting a message.
