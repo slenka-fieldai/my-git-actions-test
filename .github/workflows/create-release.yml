@@ -73,9 +73,25 @@ jobs:
     needs: [create-release-branch-and-pr]
     runs-on: ubuntu-latest
     steps:
-      - name: Failed step
-        run: |
-          exit 1
+      - name: Deployment started slack notification
+        uses: slackapi/slack-github-action@v2
+        with:
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          payload: |
+            {
+              "channel": "${{ env.SLACK_CHANNEL }}",
+              "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-prod",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": ":zap: Airflow Deployment Started ENV: fai-airflow-automations-prod"
+                  }
+                }
+               ]
+             }
       # the `text` in payload JSON is the top-level argument - it's not visible in the Slack channel message, as the blocks gets precedence,
       # however, if I remove it everything works fine though I get the warning in the GitHub Actions.
       # Why the text field kept? It's a best practice to always provide a `text` argument when posting a message.
