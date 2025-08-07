@@ -85,27 +85,27 @@ jobs:
           payload: |
             {
               "channel": "${{ env.SLACK_CHANNEL }}",
-              "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow PR for synchronizing main and develop branches",
+              "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow Release PR for Staging environment",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow PR for synchronizing main and develop branches."
+                    "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow Release PR for Staging environment"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "This PR merges the `sync` branch from `main` into `develop` as the deployment to Production environment was a success!"
+                    "text": "This PR merges the `release` branch into `main` and deploys the changes to the Airflow *Staging* environment"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Please check and validate the changes in the Production environment before merging this PR."
+                    "text": "Please review the changes, check and validate the changes in the Airflow *Staging* environment."
                   }
                 },
                 {
