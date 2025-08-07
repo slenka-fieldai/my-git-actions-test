@@ -178,7 +178,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch that triggered workflow run:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch that triggered workflow run:* `${{ github.ref_name }}`\n"
                   }
                 },
                 {
