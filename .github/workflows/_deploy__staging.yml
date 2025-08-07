@@ -38,7 +38,7 @@ jobs:
       - name: Get the branch name
         id: get-head-branch-name
         run: |
-          name=$("${{ github.ref_name }}##*/")
+          name=$("${{ github.ref }}##*/")
           echo "name=$name" >> $GITHUB_OUTPUT
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
