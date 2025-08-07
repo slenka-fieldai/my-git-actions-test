@@ -84,7 +84,7 @@ jobs:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
-              "channel": ${{ env.SLACK_CHANNEL }},
+              "channel": "${{ env.SLACK_CHANNEL }}",
               "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow PR for synchronizing `main` and `develop` branches",
               "blocks": [
                 {
