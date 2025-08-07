@@ -1,7 +1,7 @@
 name: Deploy To Staging Environment
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened, ready_for_review, review_requested]
     branches:
       - main
 jobs:
