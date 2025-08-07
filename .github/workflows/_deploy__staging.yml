@@ -30,17 +30,6 @@ jobs:
     steps:
       # why we need this? because we need the PR number in the Slack message, and further we don't need to
       # specify the output variable at job level, as steps in the same job have access to each other's outputs.
-      - name: Extract PR number or fallback
-        id: meta
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            pr_number="${{ github.event.pull_request.number }}"
-            echo "prefix=PR#" >> $GITHUB_OUTPUT
-            echo "value=$pr_number" >> $GITHUB_OUTPUT
-          else
-            echo "prefix=" >> $GITHUB_OUTPUT
-            echo "value=" >> $GITHUB_OUTPUT
-          fi
       - name: Set job status emojis
         id: status-emojis
         run: |
