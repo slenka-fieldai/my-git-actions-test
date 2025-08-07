@@ -85,7 +85,7 @@ jobs:
           payload: |
             {
               "channel": "${{ env.SLACK_CHANNEL }}",
-              "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow PR for synchronizing `main` and `develop` branches",
+              "text": "PR#${{ needs.create-release-branch-and-pr.outputs.pr-num }} Airflow PR for synchronizing main and develop branches",
               "blocks": [
                 {
                   "type": "header",
