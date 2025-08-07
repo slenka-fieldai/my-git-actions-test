@@ -67,7 +67,7 @@ jobs:
           echo "pr-num=${pr_url##*/}" >> $GITHUB_OUTPUT
 
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_BOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   send-slack-notification:
     needs: [create-release-branch-and-pr]
