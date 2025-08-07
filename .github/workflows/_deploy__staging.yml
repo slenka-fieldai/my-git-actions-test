@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run
-        run: exit 0
+        run: exit 1
   airflow-env-refresh:
     needs: [deploy-to-airflow, detect-file-changes]
     runs-on: ubuntu-latest
