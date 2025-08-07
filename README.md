@@ -3,3 +3,5 @@
 Testing the GitHub Actions workflows
 
 Test 02
+Test 03
+Test 04
