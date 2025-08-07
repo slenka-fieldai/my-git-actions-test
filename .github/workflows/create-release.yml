@@ -84,7 +84,6 @@ jobs:
           payload: |
             {
               "channel": "#test-dataset-notifications",
-              "text": "Hello from GitHub Actions! PR Raised!",
               "blocks": [
                 {
                   "type": "header",
