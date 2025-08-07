@@ -28,7 +28,7 @@ jobs:
     steps:
       # why we need this? because we need the PR number in the Slack message, and further we don't need to
       # specify the output variable at job level, as steps in the same job have access to each other's outputs.
-      - name: Extract PR number or fallback
+      - name: Extract PR number
         id: meta
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
@@ -59,6 +59,16 @@ jobs:
           echo "deploy=$deploy" >> $GITHUB_OUTPUT
           echo "detect=$detect" >> $GITHUB_OUTPUT
           echo "refresh=$refresh" >> $GITHUB_OUTPUT
+      - name: Extract branch and commit metadata
+        id: branch-and-commit
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPU
+            echo "commit=" >> $GITHUB_OUTPUT
+          else
+            echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "commit=${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
         with:
@@ -87,7 +97,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.meta.outputs.branch }}`\n${{ steps.meta.outputs.commit && format('*Commit:* `{0}`\\n', steps.meta.outputs.commit) || '' }}"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.branch-and-commit.outputs.branch }}`\n${{ steps.branch-and-commit.outputs.commit && format('*Commit:* `{0}`\\n', steps.branch-and-commit.outputs.commit) || '' }}"
                   }
                 },
                 {
