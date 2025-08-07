@@ -28,6 +28,18 @@ jobs:
     needs: [detect-file-changes, deploy-to-airflow, airflow-env-refresh]
     runs-on: ubuntu-latest
     steps:
+      # why we need this? because we need the PR number in the Slack message, and further we don't need to
+      # specify the output variable at job level, as steps in the same job have access to each other's outputs.
+      - name: Get the PR number
+        id: get-pr-number
+        run: |
+          pr_num=$(echo "${{ github.ref_name }}" | cut -d'/' -f1)
+          echo "pr_num=$pr_num" >> $GITHUB_OUTPUT
+      - name: Get the branch name
+        id: get-head-branch-name
+        run: |
+          name=$("${{ github.ref_name }}##*/")
+          echo "name=$name" >> $GITHUB_OUTPUT
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
         with:
@@ -42,7 +54,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "🚨 Workflow Failed: Deploy to Airflow staging environment"
+                    "text": "🚨 PR#${{ steps.get-pr-number.outputs.pr_num }} Workflow Failed: Deploy to Airflow staging environment"
                   }
                 },
                 {
@@ -56,7 +68,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ github.ref_name }}`\n"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.get-head-branch-name.outputs.name }}`\n"
                   }
                 },
                 {
