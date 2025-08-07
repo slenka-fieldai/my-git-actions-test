@@ -35,12 +35,26 @@ jobs:
         run: |
           pr_num=$(echo "${{ github.ref_name }}" | cut -d'/' -f1)
           echo "pr_num=$pr_num" >> $GITHUB_OUTPUT
-#      - name: Get the branch name
-#        id: get-head-branch-name
-#        run: |
-#          head_ref=$(echo "${{ github.head_ref }}")
-#          name=$("##*/")
-#          echo "name=${head_ref##*/}" >> $GITHUB_OUTPUT
+      - name: Set job status emojis
+        id: status-emojis
+        run: |
+          function mark() {
+            case "$1" in
+              success) echo ":white_check_mark:" ;;
+              failure) echo ":x:" ;;
+              skipped) echo ":double_vertical_bar:" ;;
+              cancelled) echo ":no_entry_sign:" ;;
+              *) echo ":grey_question:" ;;
+            esac
+          }
+
+          deploy=$(mark "${{ needs.deploy-to-airflow.result }}")
+          detect=$(mark "${{ needs.detect-file-changes.result }}")
+          refresh=$(mark "${{ needs.airflow-env-refresh.result }}")
+
+          echo "deploy=$deploy" >> $GITHUB_OUTPUT
+          echo "detect=$detect" >> $GITHUB_OUTPUT
+          echo "refresh=$refresh" >> $GITHUB_OUTPUT
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
         with:
@@ -62,7 +76,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Workflow job status:\n*Job*: Deploy to Airflow: `${{ needs.deploy-to-airflow.result }}`\n*Job*: Detect file changes: `${{ needs.detect-file-changes.result }}`\n*Job*: Airflow environment refresh: `${{ needs.airflow-env-refresh.result }}`\n"
+                    "text": "Workflow job status:\n*Deploy to Airflow:* ${{ steps.status-emojis.outputs.deploy }} `${{ needs.deploy-to-airflow.result }}`\n*Detect file changes:* ${{ steps.status-emojis.outputs.detect }} `${{ needs.detect-file-changes.result }}`\n*Airflow env refresh:* ${{ steps.status-emojis.outputs.refresh }} `${{ needs.airflow-env-refresh.result }}`"
                   }
                 },
                 {
