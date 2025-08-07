@@ -35,11 +35,12 @@ jobs:
         run: |
           pr_num=$(echo "${{ github.ref_name }}" | cut -d'/' -f1)
           echo "pr_num=$pr_num" >> $GITHUB_OUTPUT
-      - name: Get the branch name
-        id: get-head-branch-name
-        run: |
-          name=$("${{ github.ref }}##*/")
-          echo "name=$name" >> $GITHUB_OUTPUT
+#      - name: Get the branch name
+#        id: get-head-branch-name
+#        run: |
+#          head_ref=$(echo "${{ github.head_ref }}")
+#          name=$("##*/")
+#          echo "name=${head_ref##*/}" >> $GITHUB_OUTPUT
       - name: Send Slack message on failure
         uses: slackapi/slack-github-action@v2
         with:
@@ -68,7 +69,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.get-head-branch-name.outputs.name }}`\n"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ github.head_ref }}`\n"
                   }
                 },
                 {
