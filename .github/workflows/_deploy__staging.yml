@@ -1,4 +1,4 @@
-name: Deploy To Staging Environment
+name: Deploy To Staging Environment 2
 on:
   pull_request:
     types: [opened, reopened, ready_for_review, review_requested]
