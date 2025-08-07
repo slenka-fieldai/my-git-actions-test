@@ -1,0 +1,70 @@
+name: _deploy__staging.yml
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - main
+jobs:
+  deploy-to-airflow:
+    if: github.head_ref == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run
+        run: exit 0
+  detect-file-changes:
+    if: github.head_ref == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run
+        run: exit 0
+  airflow-env-refresh:
+    needs: [deploy-to-airflow, detect-file-changes]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run
+        run: exit 0
+  notify-failure:
+    if: ${{ failure() }}
+    needs: [detect-file-changes, deploy-to-airflow, airflow-env-refresh]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack message on failure
+        uses: slackapi/slack-github-action@v2
+        with:
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          payload: |
+            {
+              "channel": "#test-dataset-notifications",
+              "text": "🚨 Workflow Failed: Deploy to Airflow staging environment",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 Workflow Failed: Deploy to Airflow staging environment"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Workflow job status:\n*Job*: Deploy to Airflow: `${{ needs.deploy-to-airflow.result }}`\n*Job*: Detect file changes: `${{ needs.detect-file-changes.result }}`\n*Job*: Airflow environment refresh: `${{ needs.airflow-env-refresh.result }}`\n"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ github.ref_name }}`\n"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "View the full logs here:\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions Run>"
+                  }
+                }
+              ]
+            }
