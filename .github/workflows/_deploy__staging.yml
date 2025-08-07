@@ -99,7 +99,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch:* `${{ steps.branch-and-commit.outputs.branch }}`\n${{ steps.branch-and-commit.outputs.commit && format('*Commit:* `{0}`', steps.branch-and-commit.outputs.commit) || '' }}"
+                    "text": "*Repository:* <https://github.com/${{ github.repository }}|${{ github.repository }}>\n*Branch that triggered workflow run:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`"
                   }
                 },
                 {
