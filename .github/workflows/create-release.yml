@@ -59,7 +59,8 @@ jobs:
             --title "Release PR" \
             --body-file pr_body.md \
             --base main \
-            --head release)
+            --head release \
+            --reviewer "slenka-fieldai")
           
           echo "pr-url=$pr_url" >> $GITHUB_OUTPUT
           echo "Link: $pr_url"
