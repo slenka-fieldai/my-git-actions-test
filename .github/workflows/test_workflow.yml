@@ -1,0 +1,35 @@
+name: test_workflow.yml
+on:
+  workflow_dispatch:
+env:
+  is-staging: false
+permissions:
+  contents: write
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run
+        run: exit 0
+
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run
+        run: exit 1
+
+
+  job3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run
+        run: exit 0
+
+  job4:
+    runs-on: ubuntu-latest
+    if: ${{ !failure() }}
+    needs: [ job1, job2, job3 ]
+    steps:
+      - name: run failure
+        run: |
+          echo "failure() but still job ran"
