@@ -17,12 +17,31 @@ jobs:
     steps:
       - name: Run
         run: exit 1
+
+  no-new-commits-on-release:
+    outputs:
+      result: ${{ steps.no-new-commits.outputs.result }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if no new commits
+        id: no-new-commits
+        run: |
+          COUNT=$(git rev-list --count origin/develop..origin/release)
+          echo "Commits only available in release: $COUNT"
+          if ["$COUNT" -eq 0];then
+            echo "result=true" >> $GITHUB_OUTPUT
+          else
+            echo "result=false" >> $GITHUB_OUTPUT
+          fi
+
   airflow-env-refresh:
-    needs: [deploy-to-airflow, detect-file-changes]
+    needs: [deploy-to-airflow, detect-file-changes, no-new-commits-on-release]
+    if: ${{ needs.no-new-commits-on-release.outputs.result == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Run
         run: exit 0
+
   notify-failure:
     if: ${{ failure() }}
     needs: [detect-file-changes, deploy-to-airflow, airflow-env-refresh]
