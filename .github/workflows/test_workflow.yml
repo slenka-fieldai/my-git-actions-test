@@ -33,3 +33,12 @@ jobs:
       - name: run failure
         run: |
           echo "failure() but still job ran"
+
+  job5:
+    runs-on: ubuntu-latest
+    if: ${{ failure() }}
+    needs: [ job1, job2, job3 ]
+    steps:
+      - name: run failure
+        run: |
+          echo "failure() but still job ran"
