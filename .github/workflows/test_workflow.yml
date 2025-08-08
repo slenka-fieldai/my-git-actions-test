@@ -18,7 +18,6 @@ jobs:
       - name: run
         run: exit 1
 
-
   job3:
     runs-on: ubuntu-latest
     steps:
@@ -36,7 +35,7 @@ jobs:
 
   job5:
     runs-on: ubuntu-latest
-    if: ${{ failure() }}
+    if: ${{ needs.job2.result == 'failure' }}
     needs: [ job1, job2, job3 ]
     steps:
       - name: run failure
