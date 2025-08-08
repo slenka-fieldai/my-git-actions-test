@@ -41,7 +41,7 @@ jobs:
         run: |
           COUNT=$(git rev-list --count origin/develop..origin/release)
           echo "Commits only available in release: $COUNT"
-          if ["$COUNT" -eq 0];then
+          if [ "$COUNT" -eq 0 ];then
             echo "result=true" >> $GITHUB_OUTPUT
           else
             echo "result=false" >> $GITHUB_OUTPUT
