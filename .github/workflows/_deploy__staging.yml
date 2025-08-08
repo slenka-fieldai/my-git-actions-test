@@ -23,6 +23,10 @@ jobs:
       result: ${{ steps.no-new-commits.outputs.result }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the repo
+        run: |
+          - name: checkout develop branch
+            uses: actions/checkout@v4
       - name: Check if no new commits
         id: no-new-commits
         run: |
