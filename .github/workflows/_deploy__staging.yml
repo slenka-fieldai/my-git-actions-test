@@ -18,19 +18,23 @@ jobs:
       - name: Run
         run: exit 0
 
+  # why this block? this is required for the first time the 'Create Release' workflow is run we have to refresh the env,
+  # when there's no differences between develop and release branch
   no-new-commits-on-release:
     outputs:
       result: ${{ steps.no-new-commits.outputs.result }}
     runs-on: ubuntu-latest
     steps:
-      - name: checkout develop branch
+      # checkout release branch, fetch-depth 1 to get only the latest commit
+      - name: checkout release branch
         uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: release
           fetch-depth: '1'
 
-      - name: Fetch release branch
-        run: git fetch origin release:refs/remotes/origin/release
+      # fetches the develop branch
+      - name: Fetch develop branch
+        run: git fetch origin develop
 
       - name: Check if no new commits
         id: no-new-commits
