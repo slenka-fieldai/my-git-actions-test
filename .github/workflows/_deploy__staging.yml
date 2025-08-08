@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run
-        run: exit 1
+        run: exit 0
 
   no-new-commits-on-release:
     outputs:
