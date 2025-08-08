@@ -25,6 +25,12 @@ jobs:
     steps:
       - name: checkout develop branch
         uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: '1'
+
+      - name: Fetch release branch
+        run: git fetch origin release:refs/remotes/origin/release
 
       - name: Check if no new commits
         id: no-new-commits
