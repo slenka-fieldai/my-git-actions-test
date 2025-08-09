@@ -41,3 +41,38 @@ jobs:
       - name: run failure
         run: |
           echo "failure() but still job ran"
+
+  job6:
+    runs-on: ubuntu-latest
+    if: ${{ env.is-staging}}
+    steps:
+      - name: run job
+        run: |
+          echo "job6"
+
+  job7:
+    runs-on: ubuntu-latest
+    if: ${{ failure()}}
+    needs: [ job1, job6, job3 ]
+    steps:
+      - name: run failure
+        run: |
+          echo "skipped but still job ran"
+
+  job8:
+    runs-on: ubuntu-latest
+    if: ${{ !failure() }}
+    needs: [ job1, job6, job3 ]
+    steps:
+      - name: run failure
+        run: |
+          echo "skipped but still job ran"
+
+  job9:
+    runs-on: ubuntu-latest
+    if: ${{ needs.job6.result == 'skipped' }}
+    needs: [ job1, job6, job3 ]
+    steps:
+      - name: run failure
+        run: |
+          echo "skipped but still ran"
