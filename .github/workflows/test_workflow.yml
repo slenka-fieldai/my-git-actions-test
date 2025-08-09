@@ -44,7 +44,7 @@ jobs:
 
   job6:
     runs-on: ubuntu-latest
-    if: ${{ env.is-staging}}
+    if: ${{ env.is-staging }}
     steps:
       - name: run job
         run: |
@@ -52,7 +52,7 @@ jobs:
 
   job7:
     runs-on: ubuntu-latest
-    if: ${{ failure()}}
+    if: ${{ failure() }}
     needs: [ job1, job6, job3 ]
     steps:
       - name: run failure
