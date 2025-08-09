@@ -74,3 +74,12 @@ jobs:
       - name: run failure
         run: |
           echo "skipped but still ran"
+
+  job10:
+    runs-on: ubuntu-latest
+    if: ${{ !failure() }}
+    needs: [ job1, job6, job3, job2 ]
+    steps:
+      - name: run failure
+        run: |
+          echo "skipped but still job ran"
