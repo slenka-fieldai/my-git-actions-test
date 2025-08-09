@@ -1,8 +1,6 @@
 name: test_workflow.yml
 on:
   workflow_dispatch:
-env:
-  is-staging: false
 permissions:
   contents: write
 jobs:
@@ -44,7 +42,7 @@ jobs:
 
   job6:
     runs-on: ubuntu-latest
-    if: ${{ env.is-staging }}
+    if: ${{ false }}
     steps:
       - name: run job
         run: |
